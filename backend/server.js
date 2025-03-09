@@ -4,7 +4,12 @@ const dotenv = require('dotenv').config();
 const app = express();
 const port = process.env.PORT || 8081;
 
+const userRouter = require('./routes/UserRoute');
+
 app.use(express.json());
+
+//routes
+app.use('/api/user', userRouter);
 
 //Simple get req to verify if server is online
 app.get('/', (req, res) => {
