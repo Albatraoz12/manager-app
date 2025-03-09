@@ -7,6 +7,7 @@ const port = process.env.PORT || 8081;
 const app = express();
 
 const userRouter = require('./routes/UserRoute');
+const taskRouter = require('./routes/TaskRoute');
 
 app.use(
   cors({
@@ -20,6 +21,7 @@ app.use(cookieParser());
 
 //routes
 app.use('/api/user', userRouter);
+app.use('/api/task', taskRouter);
 
 //Simple get req to verify if server is online
 app.get('/', (req, res) => {
