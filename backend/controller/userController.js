@@ -1,5 +1,44 @@
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+
+//Sign in controller
+const signIn = async (req, res) => {
+  const email = req.body.email;
+  const password = req.body.password;
+
+  const user = await User.findOne({ email });
+
+  if (user) {
+    const passwordMatch = await bcrypt.compare(password, user.password);
+
+    if (passwordMatch) {
+      const token = jwt.sign(
+        {
+          id: user._id,
+          role: user.role,
+        },
+        process.env.SECRET
+      );
+
+      return res
+        .cookie('access_token', token, {
+          httpOnly: process.env.NODE_ENV == 'production' ? true : false,
+          secure: true,
+          sameSite: 'none',
+        })
+        .status(200)
+        .json({
+          message: user.firstName + ' Signed in successfully',
+          token: token,
+        });
+    } else if (!passwordMatch) {
+      res.status(400).json({ message: 'Wrong Password, try again' });
+    }
+  } else {
+    res.status(400).json({ message: 'sorry, could not login' });
+  }
+};
 
 // Sign up controller
 const signUp = async (req, res) => {
@@ -38,4 +77,4 @@ const signUp = async (req, res) => {
   }
 };
 
-module.exports = { signUp };
+module.exports = { signUp, signIn };
