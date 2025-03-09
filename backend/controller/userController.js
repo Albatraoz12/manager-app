@@ -2,6 +2,30 @@ const User = require('../models/User');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
+const identify = async (req, res) => {
+  try {
+    const user = await User.findById(req.userId);
+
+    if (user === null) {
+      res.status(400);
+      return;
+    }
+
+    res.status(200).json({
+      user: {
+        id: req.userId,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        role: user.role,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500);
+  }
+};
+
 //Sign in controller
 const signIn = async (req, res) => {
   const email = req.body.email;
@@ -77,4 +101,4 @@ const signUp = async (req, res) => {
   }
 };
 
-module.exports = { signUp, signIn };
+module.exports = { identify, signUp, signIn };
