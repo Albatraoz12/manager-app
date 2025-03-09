@@ -101,4 +101,12 @@ const signUp = async (req, res) => {
   }
 };
 
-module.exports = { identify, signUp, signIn };
+// Sign out user controller
+const signOut = (req, res) => {
+  return res
+    .clearCookie('access_token')
+    .status(200)
+    .json({ message: 'Successfully logged out' });
+};
+
+module.exports = { identify, signUp, signIn, signOut };

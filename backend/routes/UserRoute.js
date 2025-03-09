@@ -1,7 +1,12 @@
 const express = require('express');
 const router = express.Router();
 
-const { signUp, signIn, identify } = require('../controller/userController');
+const {
+  signUp,
+  signIn,
+  identify,
+  signOut,
+} = require('../controller/userController');
 const { authorization } = require('../authorization/auth');
 
 //@desc Authorized a user
@@ -9,14 +14,19 @@ const { authorization } = require('../authorization/auth');
 //@access Public
 router.get('/protected', authorization, identify);
 
+//@desc Register A User
+//@routes POST /api/user/register
+//@access Public
+router.post('/signup', signUp);
+
 //@desc Login A User
 //@routes POST /api/user/login
 //@access Public
 router.post('/signin', signIn);
 
-//@desc Register A User
-//@routes POST /api/user/register
+//@desc Logout A User
+//@routes Get /user/logout
 //@access Public
-router.post('/signup', signUp);
+router.get('/signout', authorization, signOut);
 
 module.exports = router;
