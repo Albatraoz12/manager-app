@@ -1,12 +1,22 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv').config();
-const app = express();
+const cors = require('cors');
+const cookieParser = require('cookie-parser');
 const port = process.env.PORT || 8081;
+const app = express();
 
 const userRouter = require('./routes/UserRoute');
 
+app.use(
+  cors({
+    credentials: true,
+    origin: process.env.REQUEST_URL,
+  })
+);
+
 app.use(express.json());
+app.use(cookieParser());
 
 //routes
 app.use('/api/user', userRouter);
