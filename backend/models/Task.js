@@ -7,17 +7,22 @@ const userTasks = new mongoose.Schema(
       required: true,
       max: 50,
     },
+    description: {
+      type: String,
+      required: true,
+      max: 300,
+    },
     user: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
       ref: 'User',
     },
-    listRole: {
-      type: String,
-      max: 20,
+    completed: {
+      type: Boolean,
+      default: false,
     },
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model('UserList', userTasks);
+module.exports = mongoose.model('UserTask', userTasks);
