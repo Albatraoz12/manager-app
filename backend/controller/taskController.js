@@ -25,4 +25,23 @@ const createTask = (req, res) => {
   }
 };
 
-module.exports = { createTask };
+const getTasks = async (req, res) => {
+  try {
+    const user = User.findOne({ _id: req.userId });
+    if (user) {
+      const uid = req.params.uid;
+      if (req.userId === uid) {
+        const tasks = await Task.find({ user: uid });
+        res.status(200).json({ message: tasks });
+      } else {
+        res.status(401).json({ ErrorMessage: 'Wrong crediantials!' });
+      }
+    } else {
+      res.status(404).json({ ErrorMessage: 'You are not an user!' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error });
+  }
+};
+
+module.exports = { createTask, getTasks };
