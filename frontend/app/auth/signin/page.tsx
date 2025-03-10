@@ -17,25 +17,41 @@ import { Input } from '@/components/ui/input';
 import Link from 'next/link';
 
 const formSchema = z.object({
-  username: z.string().min(2).max(50),
+  email: z.string().email(),
   password: z.string().min(5).max(50),
 });
 
 export default function page() {
-  // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: '',
+      email: '',
       password: '',
     },
   });
 
-  // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      const response = await fetch('http://localhost:8080/api/user/signin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify(values),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Server error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log('Response from server:', data);
+
+      return data;
+    } catch (error) {
+      console.error('Error during fetch:', error);
+    }
   }
 
   return (
@@ -48,10 +64,10 @@ export default function page() {
         >
           <FormField
             control={form.control}
-            name='username'
+            name='email'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Username</FormLabel>
+                <FormLabel>Email</FormLabel>
                 <FormControl>
                   <Input placeholder='task@manager.com' {...field} />
                 </FormControl>
@@ -66,7 +82,11 @@ export default function page() {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input placeholder='*******************' {...field} />
+                  <Input
+                    placeholder='*******************'
+                    {...field}
+                    type='password'
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
