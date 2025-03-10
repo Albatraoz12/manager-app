@@ -11,7 +11,7 @@ export default function Navbar() {
       </div>
       <div>
         <ul className='flex flex-row gap-3'>
-          <li>
+          <li className='hidden md:block'>
             <Link href={'/'}>Home</Link>
           </li>
           <li>
