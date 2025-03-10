@@ -32,7 +32,7 @@ export default function page() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      const response = await fetch('http://localhost:8080/api/user/signin', {
+      const response = await fetch('http://localhost:3000/api/auth/signin', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -46,7 +46,6 @@ export default function page() {
       }
 
       const data = await response.json();
-      console.log('Response from server:', data);
 
       return data;
     } catch (error) {
