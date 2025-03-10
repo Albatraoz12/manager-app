@@ -39,7 +39,7 @@ export default function page() {
   }
 
   return (
-    <section className='md:w-[600px] border bg-gray-700 text-white my-10 p-4 mx-auto py-10 flex flex-col'>
+    <section className='md:w-[600px] border md:min-h-[550px] md:max-h-[600px] bg-gray-700 text-white my-10 p-4 mx-auto py-10 flex flex-col'>
       <h1 className='text-4xl my-4'>Sign in</h1>
       <Form {...form}>
         <form
@@ -81,7 +81,7 @@ export default function page() {
         </form>
         <p className='text-center'>
           Do you need to create an account?{' '}
-          <Link href={'/signup'}>Sign up here</Link>
+          <Link href={'/auth/signup'}>Sign up here</Link>
         </p>
       </Form>
     </section>
