@@ -15,7 +15,7 @@ export default function Navbar() {
             <Link href={'/'}>Home</Link>
           </li>
           <li>
-            <Link href={'/signin'}>Sign in</Link>
+            <Link href={'/auth/signin'}>Sign in</Link>
           </li>
         </ul>
       </div>
