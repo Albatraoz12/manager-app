@@ -1,8 +1,10 @@
+import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
+    const cookieStore = await cookies();
 
     const response = await fetch('http://localhost:8080/api/user/signin', {
       method: 'POST',
@@ -18,6 +20,7 @@ export async function POST(req: Request) {
     }
 
     const data = await response.json();
+    cookieStore.set('access_token', data.token);
 
     return NextResponse.json(data);
   } catch (error) {
