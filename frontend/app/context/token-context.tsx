@@ -1,10 +1,6 @@
 'use client';
 import { createContext, useContext, useEffect, useState } from 'react';
 
-type Root = {
-  user: User;
-};
-
 type User = {
   id: string;
   email: string;
@@ -13,11 +9,13 @@ type User = {
   role: string;
 };
 
+type Root = {
+  user: User;
+};
+
 type TokenContextType = {
   user: Root | null;
   setUser: React.Dispatch<React.SetStateAction<Root | null>>;
-  errorMsg: string;
-  setErrorMsg: React.Dispatch<React.SetStateAction<string>>;
   isLoggedIn: boolean;
   setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
 };
@@ -30,44 +28,32 @@ export default function TokenContextProvider({
   children: React.ReactNode;
 }) {
   const [user, setUser] = useState<Root | null>(null);
-  const [errorMsg, setErrorMsg] = useState<string>('');
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 
-  const userInfo = async () => {
-    try {
-      const response = await fetch('http://localhost:3000/api/auth/identify');
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   useEffect(() => {
-    const fetchUserData = async () => {
-      const data = await userInfo();
-      if (data && Object.keys(data).length > 0) {
-        setUser(data);
-        console.log(data);
-      } else {
-        setErrorMsg('No user Found');
+    const checkUserStatus = async () => {
+      try {
+        const response = await fetch('/api/auth/identify', {
+          credentials: 'include',
+        });
+        const data = await response.json();
+        if (data.isLoggedIn) {
+          setUser(data.user);
+          setIsLoggedIn(true);
+        } else {
+          setUser(null);
+          setIsLoggedIn(false);
+        }
+      } catch (error) {
+        console.error('Error checking login status:', error);
       }
     };
 
-    fetchUserData();
-  }, []);
+    checkUserStatus();
+  }, [isLoggedIn]);
 
   return (
-    <TokenContext.Provider
-      value={{
-        user,
-        setUser,
-        errorMsg,
-        setErrorMsg,
-        isLoggedIn,
-        setIsLoggedIn,
-      }}
-    >
+    <TokenContext.Provider value={{ user, setUser, isLoggedIn, setIsLoggedIn }}>
       {children}
     </TokenContext.Provider>
   );

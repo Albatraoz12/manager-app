@@ -4,6 +4,9 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import Link from 'next/link';
+import { useTokenContext } from '@/app/context/token-context';
 import {
   Form,
   FormControl,
@@ -13,8 +16,6 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import Link from 'next/link';
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -22,6 +23,7 @@ const formSchema = z.object({
 });
 
 export default function page() {
+  const { setIsLoggedIn } = useTokenContext();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -46,6 +48,8 @@ export default function page() {
       }
 
       const data = await response.json();
+
+      if (data.token) setIsLoggedIn(true);
 
       return data;
     } catch (error) {

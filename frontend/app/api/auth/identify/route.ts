@@ -1,20 +1,31 @@
-import { cookies, headers } from 'next/headers';
+import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: NextRequest) {
-  const cookieStore = await cookies();
-  const cookie = cookieStore.get('access_token');
+  try {
+    const cookieStore = await cookies();
+    const cookie = cookieStore.get('access_token');
 
-  const response = await fetch('http://localhost:8080/api/user/protected', {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${cookie?.value}`,
-    },
-    credentials: 'include',
-  });
+    if (!cookie) {
+      return NextResponse.json({
+        message: 'User not logged in',
+        isLoggedin: false,
+      });
+    }
 
-  const data = await response.json();
+    const response = await fetch('http://localhost:8080/api/user/protected', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${cookie?.value}`,
+      },
+      credentials: 'include',
+    });
 
-  return NextResponse.json(data.user);
+    const data = await response.json();
+    return NextResponse.json({ user: data.user, isLoggedIn: true });
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json({ message: error });
+  }
 }
