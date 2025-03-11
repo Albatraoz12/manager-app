@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import Navbar from '@/components/Navbar';
+import TokenContextProvider from './context/token-context';
 
 export const metadata: Metadata = {
   title: 'Task Manager',
@@ -15,8 +16,10 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body>
-        <Navbar />
-        <main>{children}</main>
+        <TokenContextProvider>
+          <Navbar />
+          <main>{children}</main>
+        </TokenContextProvider>
       </body>
     </html>
   );
