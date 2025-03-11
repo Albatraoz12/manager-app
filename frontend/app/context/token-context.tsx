@@ -9,13 +9,9 @@ type User = {
   role: string;
 };
 
-type Root = {
-  user: User;
-};
-
 type TokenContextType = {
-  user: Root | null;
-  setUser: React.Dispatch<React.SetStateAction<Root | null>>;
+  user: User | null;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
   isLoggedIn: boolean;
   setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
 };
@@ -27,7 +23,7 @@ export default function TokenContextProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [user, setUser] = useState<Root | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 
   useEffect(() => {
