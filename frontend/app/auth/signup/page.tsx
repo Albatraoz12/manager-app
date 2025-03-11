@@ -36,10 +36,21 @@ export default function page() {
   });
 
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      const response = await fetch('http://localhost:8080/api/user/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(values),
+      });
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return (
@@ -96,7 +107,11 @@ export default function page() {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input placeholder='*******************' {...field} />
+                  <Input
+                    placeholder='*******************'
+                    {...field}
+                    type='password'
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
