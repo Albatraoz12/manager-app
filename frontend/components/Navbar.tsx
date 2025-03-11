@@ -5,7 +5,6 @@ import Cookies from 'js-cookie';
 
 export default function Navbar() {
   const { isLoggedIn, setIsLoggedIn } = useTokenContext();
-  console.log('is loggedin:', isLoggedIn);
 
   const signout = async () => {
     await fetch('http://localhost:8080/api/user/signout', {
@@ -31,19 +30,26 @@ export default function Navbar() {
           <li className='hidden md:block'>
             <Link href={'/'}>Home</Link>
           </li>
-          <li>
-            {isLoggedIn ? (
-              <button
-                type='button'
-                className='cursor-pointer rounded px-2 bg-red-400'
-                onClick={signout}
-              >
-                Sign out
-              </button>
-            ) : (
+          {isLoggedIn ? (
+            <>
+              <li>
+                <button
+                  type='button'
+                  className='cursor-pointer rounded px-2 bg-red-400'
+                  onClick={signout}
+                >
+                  Sign out
+                </button>
+              </li>
+              <li>
+                <Link href={'/auth/dashboard'}>Dashboard</Link>
+              </li>
+            </>
+          ) : (
+            <li>
               <Link href={'/auth/signin'}>Sign in</Link>
-            )}
-          </li>
+            </li>
+          )}
         </ul>
       </div>
     </nav>
